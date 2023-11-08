@@ -173,7 +173,7 @@ class MainActivity : ComponentActivity() {
                                 text = convertRate(
                                     exchangeRates[index].exchangeRate,
                                     selectedCurrency.exchangeRate,
-                                    amountToConvert.text.toInt()
+                                    amountToConvert.text
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()

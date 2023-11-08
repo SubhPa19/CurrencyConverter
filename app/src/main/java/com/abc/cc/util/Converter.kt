@@ -52,7 +52,12 @@ fun <T : Any> toMap(obj: T): Map<String, Any?> {
     }
 }
 
-fun convertRate(exchangeRate: Double, selectedCurrency: Double, amountToConvert: Int): String {
-    val convertedAmount = (exchangeRate / selectedCurrency).times(amountToConvert)
-    return DecimalFormat("#.##").format(convertedAmount)
+fun convertRate(exchangeRate: Double, selectedCurrency: Double, amountToConvert: String): String {
+    return try {
+        val toFloat = amountToConvert.toFloat()
+        val convertedAmount = (exchangeRate / selectedCurrency).times(toFloat)
+        DecimalFormat("#.##").format(convertedAmount)
+    } catch (e: Exception) {
+        ""
+    }
 }
