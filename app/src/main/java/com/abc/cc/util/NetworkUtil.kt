@@ -3,9 +3,7 @@ package com.abc.cc.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import okhttp3.Interceptor
-import okhttp3.Interceptor.*
-import okhttp3.Request
+
 
 
 fun isInternetAvailable(context: Context): Boolean {
