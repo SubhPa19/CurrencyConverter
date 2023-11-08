@@ -2,8 +2,6 @@ package com.abc.cc.data.model
 
 
 import com.google.gson.annotations.SerializedName
-import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
 
 data class Currencies(
     @SerializedName("AED")

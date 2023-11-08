@@ -1,11 +1,11 @@
 package com.abc.cc.ui.activities
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -42,15 +42,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.abc.cc.data.model.ExchangeRates
 import com.abc.cc.data.vm.ConverterViewModel
 import com.abc.cc.data.vm.UIEvent
 import com.abc.cc.ui.theme.CurrencyConverterTheme
+import com.abc.cc.util.convertRate
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -82,14 +80,29 @@ class MainActivity : ComponentActivity() {
             }
 
             is UIEvent.Error -> {
-
+                Toast.makeText(
+                    applicationContext,
+                    "Something unexpected occurred!",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
             UIEvent.Loading -> {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.size(50.dp, 50.dp))
-                }
+                ProgressWithText()
             }
+        }
+    }
+
+    @Composable
+    private fun ProgressWithText() {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(modifier = Modifier.size(50.dp, 50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(text = "Loading latest exchange Rates...")
         }
     }
 
@@ -100,8 +113,7 @@ class MainActivity : ComponentActivity() {
 
         var amountToConvert by remember { mutableStateOf(TextFieldValue("1")) }
         var expanded by remember { mutableStateOf(false) }
-        var selectedCurrency by remember { mutableStateOf(exchangeRates.first().name) }
-        var selectedOptionText by remember { mutableStateOf(exchangeRates.first().name) }
+        var selectedCurrency by remember { mutableStateOf(exchangeRates.first()) }
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -122,9 +134,9 @@ class MainActivity : ComponentActivity() {
             ) {
                 TextField(
                     readOnly = true,
-                    value = selectedOptionText,
+                    value = selectedCurrency.name,
                     onValueChange = { },
-                    label = {Text(text = "Select Currency")},
+                    label = { Text(text = "Select Currency") },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier.menuAnchor()
@@ -136,9 +148,8 @@ class MainActivity : ComponentActivity() {
                     exchangeRates.forEach {
                         DropdownMenuItem(text = { Text(text = it.name + " - " + it.country) },
                             onClick = {
-                                selectedOptionText = it.name
+                                selectedCurrency = it
                                 expanded = false
-                                selectedCurrency = it.name
                             })
                     }
                 }
@@ -157,10 +168,13 @@ class MainActivity : ComponentActivity() {
                             shape = RectangleShape,
                             modifier = Modifier.padding(10.dp)
                         ) {
-
                             Text(
                                 style = TextStyle(fontWeight = FontWeight.Bold),
-                                text = (exchangeRates[index].exchangeRate.times(amountToConvert.text.toInt())).toString(),
+                                text = convertRate(
+                                    exchangeRates[index].exchangeRate,
+                                    selectedCurrency.exchangeRate,
+                                    amountToConvert.text.toInt()
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 5.dp),

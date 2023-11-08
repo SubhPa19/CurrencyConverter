@@ -1,21 +1,21 @@
 package com.abc.cc.util
 
-import com.abc.cc.data.model.ExchangeRates
 import com.abc.cc.data.model.Currencies
+import com.abc.cc.data.model.ExchangeRates
 import com.abc.cc.data.model.Latest
 import java.text.DecimalFormat
-import java.util.LinkedHashMap
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 class Converter {
-    fun margeAPIResponse(currencyMapping: Currencies, latestRates: Latest?): MutableList<ExchangeRates>{
+    fun margeAPIResponse(
+        currencyMapping: Currencies,
+        latestRates: Latest?
+    ): MutableList<ExchangeRates> {
         val conversionList = mutableListOf<ExchangeRates>()
         val latestRatesMap = toMap(latestRates!!)
         val currencyHashMap = toMap(currencyMapping)
-        val any : Any? = latestRatesMap["RATES"]
+        val any: Any? = latestRatesMap["RATES"]
         val exchangeHashMap = convertAnyToLinkedHashMap(any)
         currencyHashMap.forEach { it ->
             val exchangeRate: Number = exchangeHashMap!!.getOrDefault(it.key, 0)
@@ -31,7 +31,8 @@ fun convertAnyToLinkedHashMap(any: Any?): LinkedHashMap<String, Double>? {
         val result = LinkedHashMap<String, Double>()
         for (entry in any) {
             if (entry.key is String && entry.value is Double) {
-                result[entry.key as String] = DecimalFormat("#.##").format(entry.value as Double).toDouble()
+                result[entry.key as String] =
+                    DecimalFormat("#.##").format(entry.value as Double).toDouble()
             }
         }
         return result
@@ -49,5 +50,9 @@ fun <T : Any> toMap(obj: T): Map<String, Any?> {
             }
         }
     }
+}
 
+fun convertRate(exchangeRate: Double, selectedCurrency: Double, amountToConvert: Int): String {
+    val convertedAmount = (exchangeRate / selectedCurrency).times(amountToConvert)
+    return DecimalFormat("#.##").format(convertedAmount)
 }

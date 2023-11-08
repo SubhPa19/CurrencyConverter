@@ -2,8 +2,6 @@ package com.abc.cc.data.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abc.cc.data.model.ExchangeRates
-import com.abc.cc.data.model.Latest
 import com.abc.cc.data.repo.Repository
 import com.abc.cc.util.Converter
 import com.abc.cc.util.DispatchersProvider
@@ -37,12 +35,19 @@ class ConverterViewModel @Inject constructor(
             val latestRatesResult = latestRatesDeferred.await()
 
             when (currenciesResult) {
-                is Resources.Error -> _exchangeRates.value = UIEvent.Error(currenciesResult.message!!)
+                is Resources.Error -> _exchangeRates.value =
+                    UIEvent.Error(currenciesResult.message!!)
+
                 is Resources.Success -> {
                     when (latestRatesResult) {
-                        is Resources.Error -> _exchangeRates.value = UIEvent.Error(latestRatesResult.message!!)
+                        is Resources.Error -> _exchangeRates.value =
+                            UIEvent.Error(latestRatesResult.message!!)
+
                         is Resources.Success -> {
-                            val exchangeRateList = Converter().margeAPIResponse(currenciesResult.data!!, latestRatesResult.data)
+                            val exchangeRateList = Converter().margeAPIResponse(
+                                currenciesResult.data!!,
+                                latestRatesResult.data
+                            )
                             _exchangeRates.value = UIEvent.ExchangeRates(exchangeRateList)
                             _dataLoaded.value = true
                         }
@@ -51,6 +56,8 @@ class ConverterViewModel @Inject constructor(
             }
         }
     }
+
+
 }
 
 sealed class UIEvent {
