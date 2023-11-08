@@ -11,6 +11,7 @@ import dagger.hilt.android.HiltAndroidApp
 class CurrencyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+
         val gsonBuilder = GsonBuilder()
         val instanceCreator = MyInstanceCreator()
         gsonBuilder.registerTypeAdapter(Latest::class.java, instanceCreator).setLenient()

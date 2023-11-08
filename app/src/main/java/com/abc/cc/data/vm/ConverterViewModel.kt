@@ -56,8 +56,6 @@ class ConverterViewModel @Inject constructor(
             }
         }
     }
-
-
 }
 
 sealed class UIEvent {
