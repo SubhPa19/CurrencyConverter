@@ -6,4 +6,4 @@ A currency Converter App in kotlin using Jetpack compose and StateFlow
 
 
 
-<img src="https://github.com/SubhPa19/CurrencyConverter/assets/10251601/3f1c88ad-0c3e-469d-975c-1738fd426465" width="500" height="800">
+<img src="https://github.com/SubhPa19/CurrencyConverter/assets/10251601/3f1c88ad-0c3e-469d-975c-1738fd426465" width="500" height="950">
