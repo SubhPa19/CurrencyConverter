@@ -5,4 +5,5 @@ A currency Converter App in kotlin using Jetpack compose and StateFlow
 3. All available converted currency from openExchange.org will be displayed 
 
 
-![Screenshot_20231109_140000](https://github.com/SubhPa19/CurrencyConverter/assets/10251601/3f1c88ad-0c3e-469d-975c-1738fd426465)
+
+<img src="https://github.com/SubhPa19/CurrencyConverter/assets/10251601/3f1c88ad-0c3e-469d-975c-1738fd426465" width="100" height="100">
