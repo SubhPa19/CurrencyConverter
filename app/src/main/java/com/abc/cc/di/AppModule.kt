@@ -61,14 +61,14 @@ object AppModule {
     @Provides
     fun provideCurrencyRepository(api: CurrencyApi): Repository = CurrencyRepository(api)
 
-    private fun provideOnlineInterceptor() = Interceptor { chain ->
+    fun provideOnlineInterceptor() = Interceptor { chain ->
         val response = chain.proceed(chain.request())
         val maxAge = 1800
         response.newBuilder().header("Cache-Control", "public, max-age=$maxAge")
             .removeHeader("Pragma").build()
     }
 
-    private fun provideOfflineInterceptor(context: Context) = Interceptor { chain ->
+    fun provideOfflineInterceptor(context: Context) = Interceptor { chain ->
         var request: Request = chain.request()
         if (!isInternetAvailable(context = context)) {
             val maxStale = 60 * 60 * 24 * 1
